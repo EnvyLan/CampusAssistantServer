@@ -70,7 +70,7 @@ class myJwxtInfo():
 		print(postData)
 		self.name = index_read_text.xpath('//span[@id="xhxm"]/text()')[0][0:-2]
 		#s = name.encode("gb2312")
-		i = 0
+
 
 		my_params = {'xh': self.stuNum, 'xm': self.name, 'gnmkdm': 'N121603'}
 		curriculum_read = requests.get(self.Curriculum_URL, params=my_params, data= postData, headers=self.header)
@@ -82,7 +82,7 @@ class myJwxtInfo():
 		#则用item去取，例如 h.text 是不能取得全部内容的，原因不明，继续查官方文档
 		#2015-12-12：text()只能取到上一级标签下的全部内容， br可以忽略掉取，但再加一层标签，无法取到内部。
 		h_list = curriculum_read_text.xpath("//table[@id='Table1']//tr[position()>3]//td[@align]/text()")
-
+		i = 0
 		for h in h_list:
 			if h == u'\xa0':
 				continue
