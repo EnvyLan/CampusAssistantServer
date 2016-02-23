@@ -1,4 +1,6 @@
 #coding=utf-8
+from util import MongodbConnection
+
 __author__ = 'EnvyLan'
 import requests
 import json
@@ -11,6 +13,9 @@ class myJwxtInfo():
 		self.stuPwd = stuPwd
 		#把一些URL文件预先写到文件里去，以后修改维护方便
 		self.jwxt_xml = etree.ElementTree(file='D:/XML/a.xml')
+		self.index_URL = str(self.jwxt_xml.xpath("/jwxt/index/text()"))[2:-2]
+		self.CheckCode_URL = str(self.jwxt_xml.xpath("/jwxt/CheckCode/text()"))[2:-2]
+		self.Curriculum_URL = str(self.jwxt_xml.xpath("/jwxt/curriculum/part1/text()"))[2:-2]
 		self.header = {
             "Content-Type":"application/x-www-form-urlencoded",
             'Accept-Language':'zh-CN,zh;q=0.8',
@@ -21,11 +26,18 @@ class myJwxtInfo():
             'Accept-Encoding':'gzip, deflate, sdch',
             'Connection':'keep-alive',
         }
-		self.myTest()
+		self.check_student()
 
 
+	#对该学生是否已经在数据库中有记录进行检查
+	import util.MongodbConnection
+	def check_student(self):
+		myClient = MongodbConnection.myConnection('127.0.0.1', 27017)
+		db = myClient['test'] #test为数据库名字
+		collection = db['foo'] # foo为collection的名字
+		print( collection.find().count())
 
-
+	# 登录
 	def jwxt_Login(self):
 		r = requests.get(self.index_URL)
 		#krint(r.text)
@@ -54,11 +66,16 @@ class myJwxtInfo():
             'hidsc': ''
             }
 
+
 		index_read = requests.post(self.index_URL,data=login_postData)
 		#print(index_read.text)
 		#把登录之后的html页面的text传给下一个方法。
-		self.getCurriculum(etree.HTML(index_read.text))
+		'''
+			self.getCurriculum(etree.HTML(index_read.text))
+		'''
+		return index_read
 
+	# 获取课表
 	def getCurriculum(self, index_read_text):
 		postData = {
 			'__EVENTTARGET': 'xqd',
@@ -101,17 +118,10 @@ class myJwxtInfo():
 
 
 
-	def myTest(self):
-		self.index_URL = str(self.jwxt_xml.xpath("/jwxt/index/text()"))[2:-2]
-		self.CheckCode_URL = str(self.jwxt_xml.xpath("/jwxt/CheckCode/text()"))[2:-2]
-		self.Curriculum_URL = str(self.jwxt_xml.xpath("/jwxt/curriculum/part1/text()"))[2:-2]
 
 
 
 
 
-	def myTest2(self):
-		self.myTest()
 
-s = myJwxtInfo(31207311,'hello123')
-s.jwxt_Login()
+
