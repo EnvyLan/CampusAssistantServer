@@ -30,12 +30,17 @@ class myJwxtInfo():
 
 
 	#对该学生是否已经在数据库中有记录进行检查
-	import util.MongodbConnection
 	def check_student(self):
 		myClient = MongodbConnection.myConnection('127.0.0.1', 27017)
 		db = myClient['test'] #test为数据库名字
 		collection = db['foo'] # foo为collection的名字
-		print( collection.find().count())
+		if(collection.find_one({'stuId':31207313}) == None):
+			#新用户，去抓取网页
+			pass
+
+		else:
+			#老用户，读取MongoDb
+			pass
 
 	# 登录
 	def jwxt_Login(self):
@@ -84,7 +89,7 @@ class myJwxtInfo():
 			'xnd' : '2013-2014',
 			'xqd' : '2'
 		}
-		print(postData)
+		#print(postData)
 		self.name = index_read_text.xpath('//span[@id="xhxm"]/text()')[0][0:-2]
 		#s = name.encode("gb2312")
 
@@ -93,12 +98,13 @@ class myJwxtInfo():
 		curriculum_read = requests.get(self.Curriculum_URL, params=my_params, data= postData, headers=self.header)
 		#print(curriculum_read.text)
 		curriculum_read_text = etree.HTML(curriculum_read.text)
-
+		curriculum_read_text2 = etree.HTML(curriculum_read.text)
+		print(curriculum_read.text)
 		#这里的xpath表达式中 /text()  莫名其妙的就取到了所有该节点下的全部内容，
 		#包括<br>标签分割的内容,经测试发现，text()函数跟在/后面可行，如果不跟，
 		#则用item去取，例如 h.text 是不能取得全部内容的，原因不明，继续查官方文档
 		#2015-12-12：text()只能取到上一级标签下的全部内容， br可以忽略掉取，但再加一层标签，无法取到内部。
-		h_list = curriculum_read_text.xpath("//table[@id='Table1']//tr[position()>3]//td[@align]/text()")
+		h_list = curriculum_read_text2.xpath("//table[@id='Table1']//tr[position()>3]//td[@align]/text()")
 		i = 0
 		for h in h_list:
 			if h == u'\xa0':
