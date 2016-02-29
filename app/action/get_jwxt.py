@@ -33,7 +33,8 @@ class myJwxtInfo():
 		myClient = MongodbConnection.myConnection('127.0.0.1', 27017)
 		db = myClient['test'] #test为数据库名字
 		collection = db['foo'] # foo为collection的名字
-		if(collection.find_one({'stuId':31207313}) == None):
+		print(collection.find_one({'stuId':31207311},{"class1": 1}))
+		if(collection.find_one({'stuId':31207311}) == None):
 			#新用户，去抓取网页
 			pass
 
