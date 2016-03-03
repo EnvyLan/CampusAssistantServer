@@ -1,9 +1,7 @@
 __author__ = 'EnvyLan'
+from flask import Blueprint
+api1 = Blueprint('api1', __name__)
 
-
-from pymongo import MongoClient
-client = MongoClient()
-db = client.test
-collection = db.foo
-print( collection.find().count() )
-
+@api1.route('/test')
+def test():
+	return "helloworld"

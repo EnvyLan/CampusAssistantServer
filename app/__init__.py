@@ -1,16 +1,19 @@
 __author__ = 'EnvyLan'
 
 from flask import Flask
-from flask import request
 
-app = Flask(__name__)
 
-from api_1_0 import api as api_1_0_blueprint
-app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
 
-@app.route("/hello")
-def hello():
-	return "<h1>helloworld</h1>"
-if __name__ == '__main__':
-    app.run(debug=True)
+
+print('hahahha')
+
+def create_app():
+	app = Flask(__name__)
+	from app.api_1_0 import api as api_1_0_blueprint
+	from util.MongoTest import api1 as api1
+	app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1')
+	app.register_blueprint(api1, url_prefix='/t')
+	return app
+
+
 
