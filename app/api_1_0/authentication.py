@@ -16,21 +16,21 @@ def verify_pwd():
 	postData = request.get_json(force=True)
 	print(postData)
 	#这里说明第一次登陆，是没有token的
-	# if postData['token'] == "":
-	# 	g.user = User(postData['stuId'],postData['Pwd'])
-	# 	#对账号密码进行验证
-	# 	getClass = myJwxtInfo(g.user.get_stuid(), g.user.get_pwd())
-	# 	token = g.user.generate_user_token();
-	# 	if getClass.before_getCurriculum(getClass.jwxt_Login(), token):
-	# 		return jsonify({'statue':'100','token': token, 'stuId':g.user.get_stuid(), 'xnd':getClass.returnXnd()})
-	# 	else:
-	# 		return jsonify({'statue':'101','message':'error'})
-	# #有token，直接去Mongodb查找数据
-	# else:
-	# 	if verify_token(postData['stuId'], postData['token']):
-	# 		pass
-	# 	else:
-	return jsonify({'statue':'101','message':'error'})
+	if postData['token'] == "":
+		g.user = User(postData['stuId'],postData['Pwd'])
+		#对账号密码进行验证
+		getClass = myJwxtInfo(g.user.get_stuid(), g.user.get_pwd())
+		token = g.user.generate_user_token();
+		if getClass.before_getCurriculum(getClass.jwxt_Login(), token):
+			return jsonify({'statue':'100','token': token, 'stuId':g.user.get_stuid(), 'xnd':getClass.returnXnd()})
+		else:
+			return jsonify({'statue':'101','message':'error'})
+	#有token，直接去Mongodb查找数据
+	else:
+		if verify_token(postData['stuId'], postData['token']):
+			pass
+		else:
+			return jsonify({'statue':'101','message':'error'})
 
 #验证token函数，以后把它改成修饰器函数，目前先调用用着
 def verify_token(stuId, token):

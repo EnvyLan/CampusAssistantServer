@@ -29,12 +29,12 @@ class myJwxtInfo():
         }
 
 	# 登录
-	def jwxt_Login(self):
-		r = requests.get(self.index_URL)
+	def jwxt_Login(self, yzm=""):
+		#r = requests.get(self.index_URL)
 		#krint(r.text)
-		dom = etree.HTML(r.text)
+		#dom = etree.HTML(r.text)
 		#u'获取网页的登陆值，类似token的一个值
-		jwxt_VIEWSTATE = dom.xpath('//input[@name="__VIEWSTATE"]/@value')[0]
+		#jwxt_VIEWSTATE = dom.xpath('//input[@name="__VIEWSTATE"]/@value')[0]
 		#把验证码图片写进本地文件，手动输入验证码，只是权宜之计
 		try:
 			CheckCode_file = open("D:/Downloads/1.gif", 'w+b')
@@ -46,7 +46,7 @@ class myJwxtInfo():
 		yzm = raw_input("yzm= ")
 
 		login_postData = {
-            '__VIEWSTATE': jwxt_VIEWSTATE,
+            '__VIEWSTATE': 'dDwyODE2NTM0OTg7Oz7r5LOCfUV7vFG62JP9rMYu0xxl0A==',
             'txtUserName': self.stuNum,
             'TextBox2': self.stuPwd,
             'txtSecretCode': yzm,
