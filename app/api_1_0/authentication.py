@@ -21,7 +21,7 @@ def verify_pwd():
 		#对账号密码进行验证
 		getClass = myJwxtInfo(g.user.get_stuid(), g.user.get_pwd())
 		token = g.user.generate_user_token();
-		if getClass.before_getCurriculum(getClass.jwxt_Login(), token):
+		if getClass.before_getCurriculum(getClass.jwxt_Login(postData['yzm']), token):
 			return jsonify({'statue':'100','token': token, 'stuId':g.user.get_stuid(), 'xnd':getClass.returnXnd()})
 		else:
 			return jsonify({'statue':'101','message':'error'})

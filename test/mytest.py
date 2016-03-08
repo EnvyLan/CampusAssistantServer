@@ -11,11 +11,20 @@ __author__ = 'EnvyLan'
 #
 import requests
 
+
+try:
+	CheckCode_file = open("D:/Downloads/1.gif", 'w+b')
+	CheckCode_file.write(requests.get("http://124.160.104.166/(ly4cbj55dzuvnumdthpxgkqw)/CheckCode.aspx", stream = True).content)
+except IOError:
+	print("IOError\n")
+finally:
+	CheckCode_file.close()
+	yzm = raw_input("yzm= ")
 login_postData = {
             '__VIEWSTATE': 'dDwyODE2NTM0OTg7Oz7r5LOCfUV7vFG62JP9rMYu0xxl0A==',
             'txtUserName': 31207311,
             'TextBox2': 'hello123',
-            'txtSecretCode': '5bnp',
+            'txtSecretCode': yzm,
             'RadioButtonList1': '%D1%A7%C9%FA',
             'hidPdrs': '',
             'lbLanguage': '',

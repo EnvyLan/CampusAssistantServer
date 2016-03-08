@@ -36,14 +36,14 @@ class myJwxtInfo():
 		#u'获取网页的登陆值，类似token的一个值
 		#jwxt_VIEWSTATE = dom.xpath('//input[@name="__VIEWSTATE"]/@value')[0]
 		#把验证码图片写进本地文件，手动输入验证码，只是权宜之计
-		try:
-			CheckCode_file = open("D:/Downloads/1.gif", 'w+b')
-			CheckCode_file.write(requests.get(self.CheckCode_URL, stream = True).content)
-		except IOError:
-			print("IOError\n")
-		finally:
-			CheckCode_file.close()
-		yzm = raw_input("yzm= ")
+		# try:
+		# 	CheckCode_file = open("D:/Downloads/1.gif", 'w+b')
+		# 	CheckCode_file.write(requests.get(self.CheckCode_URL, stream = True).content)
+		# except IOError:
+		# 	print("IOError\n")
+		# finally:
+		# 	CheckCode_file.close()
+		# yzm = raw_input("yzm= ")
 
 		login_postData = {
             '__VIEWSTATE': 'dDwyODE2NTM0OTg7Oz7r5LOCfUV7vFG62JP9rMYu0xxl0A==',
