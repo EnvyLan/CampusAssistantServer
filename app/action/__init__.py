@@ -1,4 +1,4 @@
-from app.action import get_jwxt
+from app.action import GetJWXT
 
 __author__ = 'EnvyLan'
 

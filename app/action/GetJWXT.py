@@ -61,7 +61,7 @@ class myJwxtInfo():
 		index_read = requests.post(self.index_URL,data=login_postData)
 		#print(index_read.text)
 		#把登录之后的html页面的text传给下一个方法。
-
+		print('999'+self.index_URL+'999')
 		return (etree.HTML(index_read.text))
 
 	def returnXnd(self):
@@ -74,6 +74,7 @@ class myJwxtInfo():
 
 	def before_getCurriculum(self, urlReader, token=''):
 		#此处传过来的网页未登录进去之后的主页
+		print("执行获取课表之前的动作")
 		postData = {
 			'__EVENTTARGET': 'xqd',
 			'__EVENTARGUMENT': '',
@@ -91,12 +92,14 @@ class myJwxtInfo():
 		curriculum_read = requests.get(self.Curriculum_URL, headers=self.header)
 		findxnd = etree.HTML(curriculum_read.text)
 		self.xnqlist = findxnd.xpath('//table[@id="Table2"]//select[@name="xnd"]//option/text()')
+		print("执行获取 学年的数据")
 		for h in self.xnqlist:
 			findxnd = self.getCurriculum(self.getCurriculum(findxnd, h, '1'), h, '2')
 
 		return True
 
 	def getCurriculum(self, index_read_text, xnd, xqd):
+		print("执行获取课表的动作")
 		postData = {
 			'__EVENTTARGET': 'xnd',
 			'__EVENTARGUMENT': '',
