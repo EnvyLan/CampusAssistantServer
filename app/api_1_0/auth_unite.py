@@ -1,8 +1,10 @@
 __author__ = 'EnvyLan'
-from app.api_1_0 import  api
 from flask import request
-from app.action import GetBookLendRecord
 from flask import jsonify
+
+from app.api_1_0 import  api
+from app.action import GetBookLendRecord
+
 
 #参数有两个，学号stuId和密码Pwd，
 @api.route("/virfy_unite_user", methods=['post'])
