@@ -3,15 +3,15 @@ from flask import request
 from flask import jsonify
 
 from app.api_1_0 import  api
-from app.action import GetBookLendRecord
+from app.action import GetUniteAccount
 
 
 #参数有两个，学号stuId和密码Pwd，
 @api.route("/virfy_unite_user", methods=['post'])
 def virify_unite_user():
 	postData = request.get_json(force=True)
-	unite = GetBookLendRecord(postData['stuId'], postData['Pwd'])
-	url = unite.getRecord()
+	unite = GetUniteAccount(postData['stuId'], postData['Pwd'])
+	url = unite.getURL()
 	if url == False:
 		pass
 	else:

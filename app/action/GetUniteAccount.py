@@ -30,15 +30,19 @@ class GetBookLendRecord():
             'Accept-Encoding':'gzip, deflate, sdch'
 		}
 
-	def returnToken(self):
+	def getToken(self):
 		self.generateToken()
 		return self.token
+
+	def getURL(self):
+		self.recordURL = self.getRecord()
+		return self.recordURL
 
 	def generateToken(self):
 		self.token = Serializer('SECRET_KEY').dumps({'token':self.stuId}).decode('ascii')
 
 	def insertDB(self):
-		self.myCollection.insert()
+		self.myCollection.update({'stuId':self.stuId}, {'$set':{'stuId':self.stuId, 'Pwd':self.Pwd, 'token':self.token, 'RecordURL':self.recordURL}}, upsert=True)
 
 	def getRecord(self):
 		i = 1
