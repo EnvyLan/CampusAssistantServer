@@ -1,9 +1,27 @@
 #coding=utf-8
 __author__ = 'EnvyLan'
 import requests
-s = "http://ms.zucc.edu.cn:8080/sms/opac/user/lendStatus.action?sn=223B9A1BD48F7D670C57521A003A1BE401D1E0AB0CC6C4C843C442C345F3D32F64718B7D5FB4C4631017B3185E0DC9A56FE4B29FFDC1529003ED58299D88FC50750D74CB32C089EA&xc=0"
-print(s[:-1]+'3')
+myList = u'操作系统原理!周五第1,2节{第1-17周|单周}!胡隽!理4-226!2015年01月23日(08:10-10:10)!教六406!大学物理(Ⅱ)!周二第3,4节{第1-17周}!凌俐!教五206!2015年01月18日(14:00-16:00)!教五310!操作系统原理!周三第3,4,5节{第1-17周}!胡隽!教六405!2015年01月23日(08:10-10:10)!教六406!计算机网络!周四第3,4,5节{第1-17周}!蔡建平!教五610!2015年01月23日(14:00-16:00)!教五406!数据库系统应用与管理!周五第3,4,5节{第1-17周}!罗荣良!理4-222!2015年01月25日(08:10-10:10)!教五406!计算机信息安全!周一第6,7节{第1-17周}!王云武!理4-217!2015年01月22日(14:00-16:00)!教七206!'
+s = u'中文截取'
+import sys
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
+print(s )
+s = myList.split('!')
+st = s[0]
+temp = [u'周一第', u'周二第', u'周三第', u'周四第', u'周五第', u'周六第',u'周日第']
+l = []
+for h in range(len(s)):
+	if s[h].decode('utf-8')[0:3] in temp:
+		l.append(s[h-1])
+		l.append(s[h])
+		l.append(s[h+1])
+		l.append(s[h+2])
+		h = h+3
 
+s = '!'.join(l)
+print(type(s))
+print(s)
 #l = requests.post("http://mc.zucc.edu.cn/irdUser/login/opac/opacLogin.jspx", data=login_data, cookies = _cookie, headers=header)
 #print(l.text)
 #t = s.get("http://mlib.zucc.edu.cn/user/uc/showOpacinfo.jspx", cookies=l.cookies)

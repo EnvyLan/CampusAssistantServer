@@ -5,4 +5,4 @@ from app import create_app
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True, host="192.168.1.104")
+    app.run(debug=True, host='192.168.0.101')

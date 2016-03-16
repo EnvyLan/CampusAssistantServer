@@ -1,9 +1,10 @@
+#coding=utf-8
 __author__ = 'EnvyLan'
 import  requests
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from app.util import MongodbConnection
 
-class GetBookLendRecord():
+class GetUniteAccount():
 	def __init__(self, stuId, Pwd):
 		self.stuId = stuId
 		self.Pwd = Pwd
@@ -31,15 +32,21 @@ class GetBookLendRecord():
 		}
 
 	def getToken(self):
-		self.generateToken()
 		return self.token
 
 	def getURL(self):
 		self.recordURL = self.getRecord()
+		print(self.recordURL)
+		if(self.recordURL == False):
+			pass
+		else:
+			self.generateToken()
+			self.insertDB()
 		return self.recordURL
 
 	def generateToken(self):
-		self.token = Serializer('SECRET_KEY').dumps({'token':self.stuId}).decode('ascii')
+		s =  Serializer('SECRET_KEY')
+		self.token =s.dumps({'token':self.stuId}).decode('ascii')
 
 	def insertDB(self):
 		self.myCollection.update({'stuId':self.stuId}, {'$set':{'stuId':self.stuId, 'Pwd':self.Pwd, 'token':self.token, 'RecordURL':self.recordURL}}, upsert=True)
@@ -53,12 +60,13 @@ class GetBookLendRecord():
 				i = 2
 			except BaseException :
 				i = 1
-			try:
-				myCookies = mySession.send(requests.Request('post', self.loginURL, cookies=myCookies, data=self.login_data, headers=self.header).prepare()).history[0].cookies
-				record = mySession.send(requests.Request('get', self.recordURL, cookies=myCookies, headers=self.header).prepare()).history[0].headers['Location']
-			except BaseException:
-				return False
+			#try:
+			myCookies = mySession.send(requests.Request('post', self.loginURL, cookies=myCookies, data=self.login_data, headers=self.header).prepare()).history[0].cookies
+			print('myCookies=')
+			print(myCookies)
+			record = mySession.send(requests.Request('get', self.recordURL, cookies=myCookies, headers=self.header).prepare())#.history[0].headers['Location']
+			print(record)
+			#except BaseException :
+			#return False
 		return record[:-1]+'3'
 
-
-print GetBookLendRecord('31207311', '31207312').getRecord() == False

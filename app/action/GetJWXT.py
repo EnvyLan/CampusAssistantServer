@@ -61,7 +61,6 @@ class myJwxtInfo():
 		index_read = requests.post(self.index_URL,data=login_postData)
 		#print(index_read.text)
 		#把登录之后的html页面的text传给下一个方法。
-		print('999'+self.index_URL+'999')
 		return (etree.HTML(index_read.text))
 
 	def returnXnd(self):
@@ -117,24 +116,24 @@ class myJwxtInfo():
 		i = 0
 		print('xnd = '+xnd+'   xqd = '+xqd)
 		xnxqd = xnd+','+xqd
-		s = ''
-		for h in h_list:
-			if h == u'\xa0':
-				continue
-			else:
-				i+=1
-				s = s+h+'!'
-				#print(str(i)+" : "+h)
+		for h in range(len(h_list)):
+			if h_list[h] == u'\xa0':
+				h_list.pop(h)
 
+		import sys
+		reload(sys)
+		sys.setdefaultencoding( "utf-8" )
+		l = []
+		for h in range(len(h_list)):
+			if h_list[h].decode('utf-8')[0:3] in [u'周一第', u'周二第', u'周三第', u'周四第', u'周五第', u'周六第',u'周日第']:
+				l.append(h_list[h-1])
+				l.append(h_list[h])
+				l.append(h_list[h+1])
+				l.append(h_list[h+2])
+				h = h+3
+				#print(str(i)+" : "+h)
+		s = '!'.join(l)
 		self.myCollection.update({'stuId':self.stuNum}, {"$set":{xnxqd:s}}, upsert=True)
-		#print(curriculum_read.text)
-		#postData['xqd'] = 2
-		#postData['__EVENTTARGET'] = 'xqd'
-		#s = etree.HTML(curriculum_read.text).xpath('//input[@name="__VIEWSTATE"]/@value')[0]
-		#postData['__VIEWSTATE']= s
-		#print(postData)
-		#curriculum_read2 = requests.post(self.Curriculum_URL, params=my_params, data=postData, headers=header)
-		#print(curriculum_read2.text)
 		return etree.HTML(secondRequest.text)
 
 
