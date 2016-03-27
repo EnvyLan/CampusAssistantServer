@@ -64,7 +64,7 @@ class GetUniteAccount():
 			myCookies = mySession.send(requests.Request('post', self.loginURL, cookies=myCookies, data=self.login_data, headers=self.header).prepare()).history[0].cookies
 			print('myCookies=')
 			print(myCookies)
-			record = mySession.send(requests.Request('get', self.recordURL, cookies=myCookies, headers=self.header).prepare())#.history[0].headers['Location']
+			record = mySession.send(requests.Request('get', self.recordURL, cookies=myCookies, headers=self.header).prepare()).history[0].headers['Location']
 			print(record)
 			#except BaseException :
 			#return False

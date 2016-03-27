@@ -61,6 +61,7 @@ class myJwxtInfo():
 		index_read = requests.post(self.index_URL,data=login_postData)
 		#print(index_read.text)
 		#把登录之后的html页面的text传给下一个方法。
+
 		return (etree.HTML(index_read.text))
 
 	def returnXnd(self):
@@ -74,18 +75,14 @@ class myJwxtInfo():
 	def before_getCurriculum(self, urlReader, token=''):
 		#此处传过来的网页未登录进去之后的主页
 		print("执行获取课表之前的动作")
-		postData = {
-			'__EVENTTARGET': 'xqd',
-			'__EVENTARGUMENT': '',
-			'__VIEWSTATE' : urlReader.xpath('//input[@name="__VIEWSTATE"]/@value')[0],
-			'xnd' : '2013-2014',
-			'xqd' : '2'
-		}
 		try:
 			#首页上的网页是有“欢迎您：xxx”的，如果没有xxx，说明没有登录成功
 			self.name = urlReader.xpath('//span[@id="xhxm"]/text()')[0][0:-2]
 		except BaseException:
 			return False
+
+		self.getGrade()
+
 		self.myCollection.update({'stuId':self.stuNum}, {'$set':{'stuId':self.stuNum, 'stuPwd':self.stuPwd, 'token':token, 'stuName':self.name}}, upsert= True)
 		self.Curriculum_URL = self.Curriculum_URL+'?xh='+self.stuNum+'&xm='+self.name+'&gnmkdm=N121603'
 		curriculum_read = requests.get(self.Curriculum_URL, headers=self.header)
@@ -116,9 +113,6 @@ class myJwxtInfo():
 		i = 0
 		print('xnd = '+xnd+'   xqd = '+xqd)
 		xnxqd = xnd+','+xqd
-		for h in range(len(h_list)):
-			if h_list[h] == u'\xa0':
-				h_list.pop(h)
 
 		import sys
 		reload(sys)
@@ -136,8 +130,38 @@ class myJwxtInfo():
 		self.myCollection.update({'stuId':self.stuNum}, {"$set":{xnxqd:s}}, upsert=True)
 		return etree.HTML(secondRequest.text)
 
-
-
+	def getGrade(self):
+		url = self.index_URL[:-13]+'xscj_gc.aspx?xh='+self.stuNum+'&xm='+self.name+'&gnmkdm=N121605'
+		__VIEWSTATE = etree.HTML(requests.get(url, headers=self.header).text).xpath('//input[@name="__VIEWSTATE"]/@value')[0]
+		postData = {
+			'ddlXN': '',
+			'ddlXQ': '',
+			'__VIEWSTATE' : __VIEWSTATE,
+			'Button6' : u'查询已修课程最高成绩'
+		}
+		temp = requests.post(url, data=postData, headers=self.header)
+		mlist = etree.HTML(temp.text).xpath("//table[@id='Datagrid3']//tr[position()>1]//td[position()<8]/text()")
+		tempCollection = self.myDb['stu_grade']
+		print(len(mlist)/7)
+		t = 0
+		for i in range(len(mlist)):
+			tempCollection.update({'classId':mlist[t+2]}, {'$set':{'stuId':self.stuNum,
+															  'xn':mlist[t],
+		                                                      'xq':mlist[t+1],
+		                                                      'classId':mlist[t+2],
+		                                                      'className':mlist[t+3],
+		                                                      'credit':mlist[t+4],
+		                                                      'type':mlist[t+5],
+		                                                      'grade':mlist[t+6]
+		                                                      }},
+		                      upsert=True)
+			print(u'插入课程：'+mlist[t+3])
+			t = t+7
+			print(t)
+			if t == len(mlist):
+				break
+		for index, h in enumerate(mlist):
+			pass
 
 
 
