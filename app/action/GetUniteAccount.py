@@ -11,6 +11,7 @@ class GetUniteAccount():
 		self.indexURL = 'http://mlib.zucc.edu.cn'
 		self.loginURL = 'http://mc.zucc.edu.cn/irdUser/login/opac/opacLogin.jspx'
 		self.recordURL = 'http://mc.zucc.edu.cn/cmpt/opac/opacLink.jspx?stype=1'
+		self.uniteURL = 'http://ca.zucc.edu.cn/cas/login'
 		self.token = ''
 		self.myDb = MongodbConnection.myConnection('127.0.0.1',27017)
 		self.myCollection = self.myDb['UniteAccount']
@@ -69,4 +70,57 @@ class GetUniteAccount():
 			#except BaseException :
 			#return False
 		return record[:-1]+'3'
+
+	#2016-4-13：进行学校统一账号认证登录仍然有问题，第一次从网页上获取的cookies进行登录会重新跳到登录页面，貌似cookies值错误，目前无法解决这个问题
+	def getBalance(self):
+		mySession2 = requests.Session()
+		url = 'http://ca.zucc.edu.cn/cas/login?service=http://bb.zucc.edu.cn'
+		login_data={
+			'authType':'0',
+			'username':self.stuId,
+			'password':self.Pwd,
+			'lt':'',
+			'execution':'e2s1',
+			'_eventId':'submit',
+			'submit':'',
+			'randomStr':''
+		}
+		header = {
+			'Connection':'keep-alive',
+			'Cache-Control':'max-age=0',
+			'Origin':'http://ca.zucc.edu.cn',
+			'Upgtade-Indecure-Requests':'1',
+            "Content-Type":"application/x-www-form-urlencoded",
+            'Accept-Language':'zh-CN,zh;q=0.8',
+            'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36',
+            'Referer':'http://ca.zucc.edu.cn/cas/login?service=http://student.zucc.edu.cn/index.portal',
+            'Accept-Encoding':'gzip, deflate, sdch'
+		}
+		#value = mySession2.send(requests.Request('get', 'http://student.zucc.edu.cn').prepare()).history[0].cookies.get("JSESSIONID")
+		#myCookies = requests.get('http://student.zucc.edu.cn').cookies
+		#myCookies.set('JSESSIONID', value=value, domain='student.zucc.edu.cn', path='/')
+		#c = h1.history[0].cookies
+		#c2 = h1.history[1].cookies
+		#ct = c.get('JSESSIONID')
+		# from requests.cookies import RequestsCookieJar
+		# myCookies = RequestsCookieJar()
+
+		myCookies = mySession2.get(url).cookies
+		print(myCookies)
+		myCookies.set(name='CASPRIVACY', value='""', domain='ca.zucc.edu.cn', path='/cas/')
+		myCookies.set(name='CASTGC', value='', domain='ca.zucc.edu.cn', path='/cas/')
+		myCookies.set(name='JSESSIONID', value='OBXJqJHyyrB8FH07CFOx.41', domain='student.zucc.edu.cn', path='/cas')
+		h=mySession2.post(url=url, headers=header, data=login_data, cookies=myCookies)
+		print(h.text)
+		# h2 = requests.get("http://student.zucc.edu.cn", headers=header)
+		# s =h2.history[0].headers['Set-Cookie'].split(';')
+		# print(h2.cookies)
+		# print(s[0][11:])
+		#h2 = mySession2.send(requests.Request('get', url='http://student.zucc.edu.cn',cookies=myCookies).prepare())
+		h3 = mySession2.get(url='http://student.zucc.edu.cn/index.portal?.cs=cnxjb20uZWR1LmRrLnN0YXJnYXRlLnBvcnRhbC5zaXRlLmltcGwuRnJhZ21lbnRXaW5kb3d8Y3Npcy5teVN0dWRlbnRJbmZvcm1hdGlvbiFmMTE0N3x2aWV3fG5vcm1hbHxwbV9jc2lzLm15U3R1ZGVudEluZm9ybWF0aW9uIWYxMTQ3X2FjdGlvbj1zaG93fHJtX3xwcm1f', cookies=myCookies)
+		return h3.json['balance']
+
+
+
 

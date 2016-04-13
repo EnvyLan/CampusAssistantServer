@@ -44,7 +44,6 @@ class myJwxtInfo():
 		# finally:
 		# 	CheckCode_file.close()
 		# yzm = raw_input("yzm= ")
-
 		login_postData = {
             '__VIEWSTATE': 'dDwyODE2NTM0OTg7Oz7r5LOCfUV7vFG62JP9rMYu0xxl0A==',
             'txtUserName': self.stuNum,
@@ -56,8 +55,6 @@ class myJwxtInfo():
             'Button1': '',
             'hidsc': ''
             }
-
-
 		index_read = requests.post(self.index_URL,data=login_postData)
 		#print(index_read.text)
 		#把登录之后的html页面的text传给下一个方法。
@@ -80,9 +77,7 @@ class myJwxtInfo():
 			self.name = urlReader.xpath('//span[@id="xhxm"]/text()')[0][0:-2]
 		except BaseException:
 			return False
-
 		self.getGrade()
-
 		self.myCollection.update({'stuId':self.stuNum}, {'$set':{'stuId':self.stuNum, 'stuPwd':self.stuPwd, 'token':token, 'stuName':self.name}}, upsert= True)
 		self.Curriculum_URL = self.Curriculum_URL+'?xh='+self.stuNum+'&xm='+self.name+'&gnmkdm=N121603'
 		curriculum_read = requests.get(self.Curriculum_URL, headers=self.header)
