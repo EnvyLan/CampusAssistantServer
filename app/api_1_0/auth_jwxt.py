@@ -9,7 +9,6 @@ from app.util.MongodbConnection import myConnection
 from flask.ext.httpauth import HTTPBasicAuth
 auth = HTTPBasicAuth()
 
-#
 @api.route('/verify_user', methods=['post'])
 @auth.verify_password
 def verify_pwd():
@@ -17,14 +16,15 @@ def verify_pwd():
 	print(postData)
 	#这里说明第一次登陆，是没有token的
 	if postData['token'] == "":
-		print('token == ""')
 		g.user = User(postData['stuId'],postData['Pwd'])
 		#对账号密码进行验证
 		getClass = myJwxtInfo(g.user.get_stuid(), g.user.get_pwd())
 		token = g.user.generate_user_token();
 		if getClass.before_getCurriculum(getClass.jwxt_Login(postData['yzm']), token):
+			print("即将成功返回jwxt登录token")
 			return jsonify({'status':'100','token': token, 'stuId':g.user.get_stuid(), 'xnd':getClass.returnXnd()})
 		else:
+			print("看样子有错误jwxt登录更新")
 			return jsonify({'status':'101','message':'error'})
 	#有token，直接去Mongodb查找数据
 	else:
@@ -115,7 +115,7 @@ def getGradeList():
 	print(postData)
 	if verify_token(postData['stuId'], postData['token']):
 		s = []
-		for i in myConnection()['stu_grade'].find({'stuId':str(31207311)}, {'classId':1,'className':1,'credit':1,'grade':1,'type':1}):
+		for i in myConnection()['stu_grade'].find({'stuId':str(postData['stuId'])}, {'classId':1,'className':1,'credit':1,'grade':1,'type':1}):
 			i.pop('_id')
 			s.append(i)
 		return render_template('gradeList.html', gradeList=({'list':s}))

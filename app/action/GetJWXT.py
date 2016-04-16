@@ -46,9 +46,9 @@ class myJwxtInfo():
 		# yzm = raw_input("yzm= ")
 		login_postData = {
             '__VIEWSTATE': 'dDwyODE2NTM0OTg7Oz7r5LOCfUV7vFG62JP9rMYu0xxl0A==',
-            'txtUserName': self.stuNum,
-            'TextBox2': self.stuPwd,
-            'txtSecretCode': yzm,
+            'txtUserName': 31207311,
+            'TextBox2': 'hello123',
+            'txtSecretCode': 'f1uw',
             'RadioButtonList1': '%D1%A7%C9%FA',
             'hidPdrs': '',
             'lbLanguage': '',
@@ -80,7 +80,9 @@ class myJwxtInfo():
 		self.getGrade()
 		self.myCollection.update({'stuId':self.stuNum}, {'$set':{'stuId':self.stuNum, 'stuPwd':self.stuPwd, 'token':token, 'stuName':self.name}}, upsert= True)
 		self.Curriculum_URL = self.Curriculum_URL+'?xh='+self.stuNum+'&xm='+self.name+'&gnmkdm=N121603'
+		print(self.Curriculum_URL)
 		curriculum_read = requests.get(self.Curriculum_URL, headers=self.header)
+		print(curriculum_read.text)
 		findxnd = etree.HTML(curriculum_read.text)
 		self.xnqlist = findxnd.xpath('//table[@id="Table2"]//select[@name="xnd"]//option/text()')
 		print("执行获取 学年的数据")
@@ -150,17 +152,14 @@ class myJwxtInfo():
 		                                                      'grade':mlist[t+6]
 		                                                      }},
 		                      upsert=True)
-			print(u'插入课程：'+mlist[t+3])
 			t = t+7
-			print(t)
 			if t == len(mlist):
 				break
-		for index, h in enumerate(mlist):
-			pass
 
 
 
-
+getClass = myJwxtInfo('31207311', 'hello123')
+getClass.before_getCurriculum(getClass.jwxt_Login('g3mq'), 'token')
 
 
 

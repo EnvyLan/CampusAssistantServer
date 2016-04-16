@@ -19,7 +19,7 @@ def virify_unite_user():
 	else:
 		return jsonify({'status':200, 'recordURL':url, 'token':unite.getToken()})
 
-
+@api.route("/getRecordURL", methods=['post'])
 def getRecordURL():
 	postData = request.get_json(force=True)
 	if verify_token(postData['stuId'], postData['token']):
