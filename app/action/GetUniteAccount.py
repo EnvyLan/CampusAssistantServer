@@ -74,7 +74,7 @@ class GetUniteAccount():
 	#2016-4-13：进行学校统一账号认证登录仍然有问题，第一次从网页上获取的cookies进行登录会重新跳到登录页面，貌似cookies值错误，目前无法解决这个问题
 	def getBalance(self):
 		mySession2 = requests.Session()
-		url = 'http://ca.zucc.edu.cn/cas/login?service=http://bb.zucc.edu.cn'
+		url = 'http://ca.zucc.edu.cn/cas/login?service=http://student.zucc.edu.cn'
 		login_data={
 			'authType':'0',
 			'username':self.stuId,

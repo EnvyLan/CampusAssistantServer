@@ -46,9 +46,9 @@ class myJwxtInfo():
 		# yzm = raw_input("yzm= ")
 		login_postData = {
             '__VIEWSTATE': 'dDwyODE2NTM0OTg7Oz7r5LOCfUV7vFG62JP9rMYu0xxl0A==',
-            'txtUserName': 31207311,
-            'TextBox2': 'hello123',
-            'txtSecretCode': 'f1uw',
+            'txtUserName': self.stuNum,
+            'TextBox2': self.stuPwd,
+            'txtSecretCode': yzm,
             'RadioButtonList1': '%D1%A7%C9%FA',
             'hidPdrs': '',
             'lbLanguage': '',
@@ -156,10 +156,6 @@ class myJwxtInfo():
 			if t == len(mlist):
 				break
 
-
-
-getClass = myJwxtInfo('31207311', 'hello123')
-getClass.before_getCurriculum(getClass.jwxt_Login('g3mq'), 'token')
 
 
 
