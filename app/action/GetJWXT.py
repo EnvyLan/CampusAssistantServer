@@ -61,6 +61,7 @@ class myJwxtInfo():
 
 		return (etree.HTML(index_read.text))
 
+	#课表是按学年和学期来确定的，学期一般为1和2，返回学年列表让客户端知道有多少个课表
 	def returnXnd(self):
 		temp = ''
 		for h in  self.xnqlist:
