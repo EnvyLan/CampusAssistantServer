@@ -12,7 +12,7 @@
             var table = $('#myTable');
             var firstTr = table.find('tbody>tr:first');
             var row = $("<tr></tr>");
-            for (var i = 1; i < 6; i++){
+            for (var i = 1; i < 4; i++){
                 var td = $("<td></td>");
                 td.append("A1001");
                 row.append(td);
@@ -48,7 +48,6 @@ tr:nth-child(even) {
             <th data-priority="1">课程名</th>
             <th data-priority="1">学分</th>
             <th data-priority="1">成绩</th>
-            <th data-priority="1">课程类型</th>
         </tr>
       </thead>
       <tbody id="tableBody">
@@ -58,7 +57,6 @@ tr:nth-child(even) {
                 <td>{{c.className}}</td>
                 <td>{{c.credit}}</td>
                 <td>{{c.grade}}</td>
-                <td>{{c.type}}</td>
             </tr>
         {% endfor %}
       </tbody>

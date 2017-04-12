@@ -45,7 +45,7 @@ class myJwxtInfo():
 		# 	CheckCode_file.close()
 		# yzm = raw_input("yzm= ")
 		login_postData = {
-            '__VIEWSTATE': 'dDwyODE2NTM0OTg7Oz7r5LOCfUV7vFG62JP9rMYu0xxl0A==',
+            '__VIEWSTATE': 'dDwtNTE2MjI4MTQ7Oz7eLwpTkU0eZiReI563hfS1TF2rsQ==',
             'txtUserName': self.stuNum,
             'TextBox2': self.stuPwd,
             'txtSecretCode': yzm,
@@ -56,7 +56,7 @@ class myJwxtInfo():
             'hidsc': ''
             }
 		index_read = requests.post(self.index_URL,data=login_postData)
-		#print(index_read.text)
+		# print(index_read.text)
 		#把登录之后的html页面的text传给下一个方法。
 
 		return (etree.HTML(index_read.text))
@@ -76,14 +76,15 @@ class myJwxtInfo():
 		try:
 			#首页上的网页是有“欢迎您：xxx”的，如果没有xxx，说明没有登录成功
 			self.name = urlReader.xpath('//span[@id="xhxm"]/text()')[0][0:-2]
-		except BaseException:
+		except BaseException as e:
+			print e
 			return False
 		self.getGrade()
 		self.myCollection.update({'stuId':self.stuNum}, {'$set':{'stuId':self.stuNum, 'stuPwd':self.stuPwd, 'token':token, 'stuName':self.name}}, upsert= True)
 		self.Curriculum_URL = self.Curriculum_URL+'?xh='+self.stuNum+'&xm='+self.name+'&gnmkdm=N121603'
 		print(self.Curriculum_URL)
 		curriculum_read = requests.get(self.Curriculum_URL, headers=self.header)
-		print(curriculum_read.text)
+		# print(curriculum_read.text)
 		findxnd = etree.HTML(curriculum_read.text)
 		self.xnqlist = findxnd.xpath('//table[@id="Table2"]//select[@name="xnd"]//option/text()')
 		print("执行获取 学年的数据")
@@ -129,34 +130,41 @@ class myJwxtInfo():
 		return etree.HTML(secondRequest.text)
 
 	def getGrade(self):
-		url = self.index_URL[:-13]+'xscj_gc.aspx?xh='+self.stuNum+'&xm='+self.name+'&gnmkdm=N121605'
-		__VIEWSTATE = etree.HTML(requests.get(url, headers=self.header).text).xpath('//input[@name="__VIEWSTATE"]/@value')[0]
+		url = self.index_URL[:-13]+'xscjcx.aspx?xh='+self.stuNum+'&xm='+self.name+'&gnmkdm=N121618'
+		print (url)
+		temp = requests.get(url, headers=self.header).text
+		__VIEWSTATE = etree.HTML(temp).xpath('//input[@name="__VIEWSTATE"]/@value')[0]
 		postData = {
+			'__EVENTTARGET': '',
 			'ddlXN': '',
 			'ddlXQ': '',
 			'__VIEWSTATE' : __VIEWSTATE,
-			'Button6' : u'查询已修课程最高成绩'
+			'btn_zg' : u'课程最高成绩',
+			'__EVENTARGUMENT': ''
+
 		}
+		print postData
 		temp = requests.post(url, data=postData, headers=self.header)
+		# print temp.text
 		mlist = etree.HTML(temp.text).xpath("//table[@id='Datagrid3']//tr[position()>1]//td[position()<8]/text()")
 		tempCollection = self.myDb['stu_grade']
 		print(len(mlist)/7)
 		t = 0
 		for i in range(len(mlist)):
+			print i
 			tempCollection.update({'classId':mlist[t+2]}, {'$set':{'stuId':self.stuNum,
-															  'xn':mlist[t],
-		                                                      'xq':mlist[t+1],
-		                                                      'classId':mlist[t+2],
-		                                                      'className':mlist[t+3],
-		                                                      'credit':mlist[t+4],
-		                                                      'type':mlist[t+5],
-		                                                      'grade':mlist[t+6]
+		                                                      'classId':mlist[t],
+		                                                      'className':mlist[t+1],
+		                                                      'credit':mlist[t+2],
+		                                                      'grade':mlist[t+3]
 		                                                      }},
 		                      upsert=True)
-			t = t+7
+			t = t+5
 			if t == len(mlist):
 				break
 
 
+a = myJwxtInfo("31308023", "wjzwl222")
+a.before_getCurriculum(a.jwxt_Login("mk1u"), "dfdsfds")
 
 

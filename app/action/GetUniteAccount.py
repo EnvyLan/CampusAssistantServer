@@ -124,7 +124,7 @@ class GetUniteAccount():
 		#return h3.json['balance']
 
 
-a = GetUniteAccount('31207311', '31207311')
-a.getBalance()
+# a = GetUniteAccount('31207311', '31207311')
+#b a.getBalance()
 
 
